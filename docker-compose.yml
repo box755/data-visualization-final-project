@@ -1,28 +1,91 @@
-version: '3.4'
+#version: '3.4'
+#services:
+#  backend:
+#    build:
+#      context: .
+#      dockerfile: ./dockerfiles/backend/Dockerfile
+#    env_file: frontend/.env
+#    ports:
+#      - '5000:5000'
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:5000/healthy"]
+#      interval: 1s
+#      timeout: 3s
+#      retries: 10
+#  frontend:
+#    build:
+#      context: .
+#      dockerfile: ./dockerfiles/frontend/Dockerfile
+#    env_file: backend/.env
+#    ports:
+#      - '8080:8080'
+#    depends_on:
+#      - backend
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+#      interval: 1s
+#      timeout: 3s
+#      retries: 10
+
+
+
+
+version: '3.8'
+
 services:
   backend:
     build:
       context: .
       dockerfile: ./dockerfiles/backend/Dockerfile
-    env_file: frontend/.env
+    container_name: backend-dev
+    env_file: backend/.env
     ports:
-      - '5000:5000'
+      - "5000:5000"
+    volumes:
+      - ./backend/src:/app    # 掛載程式碼
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development # 啟動 debug mode
+    depends_on:
+      - db
+    command: flask run --host=0.0.0.0 --port=5000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/healthy"]
-      interval: 1s
+      interval: 5s
       timeout: 3s
       retries: 10
+
   frontend:
     build:
       context: .
       dockerfile: ./dockerfiles/frontend/Dockerfile
-    env_file: backend/.env
+    container_name: frontend-dev
+    env_file: frontend/.env
     ports:
-      - '8080:8080'
+      - "8080:8080"   # Vite / Vue Dev Server 預設 port
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # 避免 host 汙染 container node_modules
     depends_on:
       - backend
+    environment:
+      - VITE_API_URL=http://backend:5000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
-      interval: 1s
+      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+      interval: 5s
       timeout: 3s
       retries: 10
+
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: appdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
