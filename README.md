@@ -1,7 +1,7 @@
 # 🌍 全球旅遊數據可視化系統
 
 > 一個基於 plotly + Vue.js + Flask 的交互式全球旅遊數據分析平台
-[![Plotly](https://upload.wikimedia.org/wikipedia/commons/8/8a/Plotly-logo.png)]([https://www.docker.com/](https://plotly.com/python/))
+[![Plotly](https://img.shields.io/badge/-Plotly-0D1117?style=flat-square&logo=plotly)]([https://www.docker.com/](https://plotly.com/python/))
 [![Python](https://img.shields.io/badge/Python-3.9-blue.svg)](https://www.python.org/)
 [![Vue](https://img.shields.io/badge/Vue.js-3.x-green.svg)](https://vuejs.org/)
 [![Flask](https://img.shields.io/badge/Flask-2.x-black.svg)](https://flask.palletsprojects.com/)
