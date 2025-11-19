@@ -12,9 +12,6 @@ class API(RestAPI):
 
     @staticmethod
     def add_cors_headers(response):
-        """
-        Enable support for CORS Headers.
-        """
         response.headers.add('Access-Control-Allow-Origin', '*')
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
@@ -23,18 +20,19 @@ class API(RestAPI):
 
 api = API()
 
-# Charts
-api.add_resource(
-    reports.GenresByUserScoreAVGChartResource,
-    '/genres-by-user-score-avg')
+# 世界地圖數據
+api.add_resource(reports.WorldMapDataResource, '/world-map-data')
+api.add_resource(reports.WorldMapExpenditureResource, '/world-map-expenditure')
+api.add_resource(reports.WorldMapAvgSpendingResource, '/world-map-avg-spending')
+api.add_resource(reports.WorldMapCrowdScoreResource, '/world-map-crowd-score')
 
+# 國家詳細數據
+api.add_resource(reports.JapanMonthlyVisitorsResource, '/country/JPN/monthly-visitors')
+api.add_resource(reports.KoreaMonthlyVisitorsResource, '/country/KOR/monthly-visitors')
 api.add_resource(
-    reports.PlatformsByUserScoreAVGChartResource,
-    '/platforms-by-user-score-avg')
+    reports.CountryExpenditureBreakdownResource,
+    '/country/<string:country_code>/expenditure-breakdown'
+)
 
-api.add_resource(
-    reports.GameReleasePercentByPlatformInTheYearsChartResource,
-    '/game-release-percent-by-platform-in-the-years')
-
-# Infra
+# 健康檢查
 api.add_resource(HealthyCheckResource, '/healthy')
